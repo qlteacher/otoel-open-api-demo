@@ -1,15 +1,11 @@
 # 2025年相较于2024年变化
 
-1. 获取accessToken接口：加强了安全性，返回值有变化，详见[文档](./document/%E8%8E%B7%E5%8F%96accessToken%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3.md)和示例([示例](./src/main/java/com/qlteacher/demo/AccessTokenDemo.java))
+1. 获取accessToken接口：加强了安全性，返回值有变化，详见[文档](./document/%E8%8E%B7%E5%8F%96accessToken%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3.md)和[示例](./src/main/java/com/qlteacher/demo/AccessTokenDemo.java)
 2. 读取传课配置接口：activity/structures/{actId}，增加RequestParam adviserCount 指导教师数
 3. 申请接口上传接口：otoel-upload/lesson/apply，增加RequestParam adviserCount 指导教师数
 4. userType枚举增加 adviser指导教师
 
 [2025年规则检查及提示信息表](document/2025regular.md)
-
-# 2025年创课目录
-
-[2025年创课目录](document/2025年度创课目录.xlsx)
 
 # demo目录结构
 
