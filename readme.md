@@ -7,6 +7,10 @@
 
 [2025年规则检查及提示信息表](document/2025regular.md)
 
+# 2025年创课目录
+
+[2025年创课目录](document/2025年度创课目录.xlsx)
+
 # demo目录结构
 
 - src/main/java/ java代码目录
@@ -27,7 +31,7 @@
 
 推荐参照流程图，直接使用process目录下步骤Process1~7，即可完整走完一个上传流程
 
-# 上传课例流程图
+## 上传课例流程图
 
 ![](document/upload_lesson_flow.png)
 
