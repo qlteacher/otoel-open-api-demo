@@ -5,6 +5,8 @@
 3. 申请接口上传接口：otoel-upload/lesson/apply，增加RequestParam adviserCount 指导教师数
 4. userType枚举增加 adviser指导教师
 
+[2025年规则检查及提示信息表](document/2025regular.md)
+
 # demo目录结构
 
 - src/main/java/ java代码目录
