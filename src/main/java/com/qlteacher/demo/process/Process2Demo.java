@@ -1,7 +1,10 @@
 package com.qlteacher.demo.process;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.luckypeng.mock.core.Mock;
 import com.qlteacher.demo.Constant;
 import com.qlteacher.demo.pojo.conf.ConfigUtil;
 import com.qlteacher.demo.pojo.dto.CreativeTeamDTO;
@@ -12,7 +15,11 @@ import lombok.SneakyThrows;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 第二步通过SpringEL处理引擎将模板处理成可提交的JSON数据
@@ -22,6 +29,11 @@ import java.util.stream.Collectors;
 public class Process2Demo {
 
     private static final String TITLE = "文学阅读与创意表达-测试优课";
+
+    //定义遍历可填写变量的正则
+    private static final String TITLE_REGEX = "#\\{#structure\\_\\d+\\_\\d+\\_\\d+\\_title\\}";
+    private static final String LECTURER_REGEX = "#\\{#structure\\_\\d+\\_\\d+\\_\\d+\\_lecturer\\_id\\}";
+    private static final String TAGS_REGEX = "#\\{#structure\\_\\d+\\_\\d+\\_\\d+\\_tags\\}";
 
     @SneakyThrows
     public static void main(String[] args) {
@@ -50,18 +62,39 @@ public class Process2Demo {
             content.put("lesson_tags", JSON.toJSONString(new String[]{"古诗","乞巧", "嫦娥"}));
             content.put("lesson_schoolId", ConfigUtil.getConfig().getLesson().getSchoolId());
             content.put("lesson_ranking", "2");
-            content.put("structure_2_0_0_title", "古诗两首");
-            content.put("structure_2_0_0_lecturer_id", teamMaster);
-            content.put("structure_2_0_0_summary", "《古诗两首》是人教版第六册第八组的起头课文。这组教材围绕民间故事和神话传说这一主题来编排。再一次把学生带回儿时倾听大人们讲故事的快乐中去，感受古人的想象是多么丰富。");
-            content.put("structure_2_0_0_tags", JSON.toJSONString(new String[]{"小学","古诗", "三年级"}));
-            content.put("structure_2_1_0_title", "乞巧");
-            content.put("structure_2_1_0_lecturer_id", teamLecturer1);
-            content.put("structure_2_1_0_summary", "《乞巧》是唐代诗人林杰描写民间七夕乞巧盛况的古诗。也是一首想象丰富，流传很广的古诗，浅显易懂，并且涉及到家喻户晓的神话传说故事《牛郎织女》。如果学生理解古代生活背景，了解古代乞巧节的风俗，便较容易体会诗歌内容，体会诗歌情感");
-            content.put("structure_2_1_0_tags", JSON.toJSONString(new String[]{"乞巧","唐朝", "七夕", "牛郎织女"}));
-            content.put("structure_2_2_0_title", "嫦娥");
-            content.put("structure_2_2_0_lecturer_id", teamLecturer2);
-            content.put("structure_2_2_0_summary", "《嫦娥》这首古诗情感绵长幽怨，学生在情感上很难跟进，共鸣。因此，本课目标定位为感受而非感悟，力图借助本诗和嫦娥奔月的传说让学生感受到古文化的瑰丽和神奇");
-            content.put("structure_2_2_0_tags", JSON.toJSONString(new String[]{"嫦娥","奔月", "神话"}));
+            //通过正则表达式匹配模板中需要填写的属性,并使用模拟数据填充
+            JSONObject mock = new JSONObject();
+            Matcher matcher_title = Pattern.compile(TITLE_REGEX).matcher(template);
+            String teams = Stream.of(teamMaster, teamLecturer1, teamLecturer2).collect(JSONArray::new, JSONArray::add, JSONArray::add).toString();
+            while (matcher_title.find()) {
+                mock.put(matcher_title.group(), "@ctitle");
+            }
+            Matcher matcher_lecturer = Pattern.compile(LECTURER_REGEX).matcher(template);
+            while (matcher_lecturer.find()) {
+                mock.put(matcher_lecturer.group().concat("|1"), teams);
+            }
+            Matcher matcher_tags = Pattern.compile(TAGS_REGEX).matcher(template);
+            JSONArray tags = new JSONArray();
+            tags.add("@ctitle");
+            while (matcher_tags.find()) {
+                mock.put(matcher_tags.group().concat("|1-10"), tags);
+            }
+            JSONObject mockData = Mock.mock(mock);
+            mockData.entrySet().stream().filter(entry -> entry.getValue() instanceof String).forEach(entry -> {
+                content.put(entry.getKey(), entry.getValue().toString());
+            });
+//            content.put("structure_2_0_0_title", "古诗两首");
+//            content.put("structure_2_0_0_lecturer_id", teamMaster);
+//            content.put("structure_2_0_0_summary", "《古诗两首》是人教版第六册第八组的起头课文。这组教材围绕民间故事和神话传说这一主题来编排。再一次把学生带回儿时倾听大人们讲故事的快乐中去，感受古人的想象是多么丰富。");
+//            content.put("structure_2_0_0_tags", JSON.toJSONString(new String[]{"小学","古诗", "三年级"}));
+//            content.put("structure_2_1_0_title", "乞巧");
+//            content.put("structure_2_1_0_lecturer_id", teamLecturer1);
+//            content.put("structure_2_1_0_summary", "《乞巧》是唐代诗人林杰描写民间七夕乞巧盛况的古诗。也是一首想象丰富，流传很广的古诗，浅显易懂，并且涉及到家喻户晓的神话传说故事《牛郎织女》。如果学生理解古代生活背景，了解古代乞巧节的风俗，便较容易体会诗歌内容，体会诗歌情感");
+//            content.put("structure_2_1_0_tags", JSON.toJSONString(new String[]{"乞巧","唐朝", "七夕", "牛郎织女"}));
+//            content.put("structure_2_2_0_title", "嫦娥");
+//            content.put("structure_2_2_0_lecturer_id", teamLecturer2);
+//            content.put("structure_2_2_0_summary", "《嫦娥》这首古诗情感绵长幽怨，学生在情感上很难跟进，共鸣。因此，本课目标定位为感受而非感悟，力图借助本诗和嫦娥奔月的传说让学生感受到古文化的瑰丽和神奇");
+//            content.put("structure_2_2_0_tags", JSON.toJSONString(new String[]{"嫦娥","奔月", "神话"}));
             content.put("lesson_authors", JSON.toJSONString(ConfigUtil.getConfig().getLesson().getTeams()));
 
             //通过模板和数据映射生成提交用Json数据
