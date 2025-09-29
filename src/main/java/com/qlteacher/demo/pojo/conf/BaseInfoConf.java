@@ -13,4 +13,9 @@ public class BaseInfoConf {
     private String loadTeacherUrl;
 
     private String queryCatalogInfosPageUrl;
+
+    /**
+     * 下载优课公示名单url
+     */
+    private String downloadRecommendLessonCaseUrl;
 }

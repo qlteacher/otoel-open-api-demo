@@ -6,6 +6,7 @@ import com.qlteacher.demo.AccessTokenDemo;
 import com.qlteacher.demo.Constant;
 import com.qlteacher.demo.pojo.conf.ConfigUtil;
 import com.qlteacher.demo.pojo.vo.SimpleTeacherInfoVO;
+import com.qlteacher.demo.utils.SystemOutEncode;
 import lombok.SneakyThrows;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
@@ -25,6 +26,7 @@ public class LoadOtoelBaseInfoTeacherDemo {
     private static String TEST_NAME = "#人员姓名#";
 
     public static void main(String[] args) {
+        SystemOutEncode.outEncodeSet();
         SimpleTeacherInfoVO simpleTeacherInfoVO = loadOtoelBaseInfoTeacher(TEST_ACTIVITY_ID, TEST_CARDNUM, TEST_NAME);
         System.out.println(JSON.toJSONString(simpleTeacherInfoVO, SerializerFeature.PrettyFormat, SerializerFeature.WriteDateUseDateFormat));
     }

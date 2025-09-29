@@ -7,6 +7,7 @@ baseInfo:
   structuresUrl: 'https://api-1s1ksd.qlteacher.com/api/otoel-base-info/activity/structures/'
   loadTeacherUrl: 'https://api-1s1ksd.qlteacher.com/api/otoel-base-info/teacher/'
   queryCatalogInfosPageUrl: 'https://api-1s1ksd.qlteacher.com/api/otoel-base-info/catalog-infos'
+  downloadRecommendLessonCaseUrl: 'https://api-1s1ksd.qlteacher.com/api/otoel-upload/lesson-cases/download'
 lesson:
   schoolId: '#学校编号#'
   catalogId: '#目录编号#'
